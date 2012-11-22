@@ -21,3 +21,9 @@ class::
        >>> print linodes.json
 
 See ``help(API)`` for the available functions.
+
+TODO
+----
+
+- Add support for User.GetAPIKey
+- Add support for batching requests
