@@ -105,7 +105,7 @@ def build_api_method(action, info):
         if action == 'user.getapikey':
             self.key = resp['DATA']['API_KEY']
 
-        return resp
+        return resp['DATA']
 
     fn.__doc__  = '\n'.join(doc)
     fn.__name__ = str(name)
