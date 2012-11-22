@@ -25,7 +25,6 @@ See ``help(API)`` for the available functions.
 TODO
 ----
 
-- Catch errors, when downloading the spec, to die gracefully.
 - Turn API response errors into exceptions. Don't want the user to have to
   manually read out the errors.
 - ``**kwargs`` need to be shown in the docstring.

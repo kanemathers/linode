@@ -16,8 +16,12 @@ class APIGenerator(type):
     def __new__(cls, name, bases, dct):
         new_class = super(APIGenerator, cls).__new__(cls, name, bases, dct)
 
-        spec    = requests.get('https://api.linode.com/?api_action=api.spec')
-        spec    = spec.json
+        try:
+            spec = requests.get('https://api.linode.com/?api_action=api.spec')
+            spec = spec.json
+        except requests.exceptions.RequestException:
+            raise RuntimeWarning('Failed to fetch API spec from '
+                                 'api.linode.com')
 
         version = spec['DATA']['VERSION']
         methods = spec['DATA']['METHODS']
