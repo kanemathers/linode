@@ -16,7 +16,6 @@ class APIGenerator(type):
     def __new__(cls, name, bases, dct):
         new_class = super(APIGenerator, cls).__new__(cls, name, bases, dct)
 
-        # TODO: catch errors here and die gracefully
         spec    = requests.get('https://api.linode.com/?api_action=api.spec')
         spec    = spec.json
 
