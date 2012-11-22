@@ -4,9 +4,6 @@ import requests
 
 from .exceptions import MissingArgument
 
-__author__  = 'Kane Mathers'
-__version__ = '0.1'
-
 __all__ = ['API']
 
 class APIGenerator(type):
