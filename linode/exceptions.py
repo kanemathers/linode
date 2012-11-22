@@ -5,3 +5,17 @@ class MissingArgument(Exception):
 
     pass
 
+class APIError(Exception):
+    """ Raised when the Linode API returns an error.
+
+    :Parameters:
+        - `code`: The ERRORCODE returned from Linode
+        - `message`: The ERRORMESSAGE returned form Linode
+    """
+
+    def __init__(self, code, message):
+        self.code    = code
+        self.message = message
+
+    def __str__(self):
+        return '{0} ({1})'.format(self.message, self.code)

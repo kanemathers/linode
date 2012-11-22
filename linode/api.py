@@ -2,7 +2,10 @@ import textwrap
 
 import requests
 
-from .exceptions import MissingArgument
+from .exceptions import (
+    MissingArgument,
+    APIError,
+    )
 
 __all__ = ['API']
 
@@ -64,7 +67,17 @@ def build_api_method(action, parameters):
         request['api_action']         = action
         request['api_responseFormat'] = 'json'
 
-        return requests.get('https://api.linode.com/api/', params=request)
+        resp = requests.get('https://api.linode.com/api/', params=request)
+        resp = resp.json
+
+        if resp['ERRORARRAY']:
+            # we obviously can't raise multiple exceptions. so we'll let
+            # user handle them one at a time.
+            error = resp['ERRORARRAY'].pop()
+
+            raise APIError(error['ERRORCODE'], error['ERRORMESSAGE'])
+
+        return resp
 
     return fn
 

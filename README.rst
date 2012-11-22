@@ -25,6 +25,4 @@ See ``help(API)`` for the available functions.
 TODO
 ----
 
-- Turn API response errors into exceptions. Don't want the user to have to
-  manually read out the errors.
 - ``**kwargs`` need to be shown in the docstring.
