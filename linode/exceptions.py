@@ -19,3 +19,6 @@ class APIError(Exception):
 
     def __str__(self):
         return '{0} ({1})'.format(self.message, self.code)
+
+class APIKeyError(Exception):
+    """ Raised when a request is attempted with no API key set. """

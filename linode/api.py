@@ -5,6 +5,7 @@ import requests
 from .exceptions import (
     MissingArgument,
     APIError,
+    APIKeyError,
     )
 
 __all__ = ['API']
@@ -78,6 +79,10 @@ def build_api_method(action, info):
             doc += ['Raises :class:exceptions.APIError ({0})'.format(exc)]
 
     def fn(self, **kwargs):
+        if not self.key and action != 'user.getapikey':
+            raise APIKeyError('No API key set. You must call '
+                              ':class:`API.user_getapikey`.')
+
         for k in required:
             if k not in kwargs:
                 raise MissingArgument('{0} is a required argument'.format(k))
@@ -96,6 +101,9 @@ def build_api_method(action, info):
             error = resp['ERRORARRAY'].pop()
 
             raise APIError(error['ERRORCODE'], error['ERRORMESSAGE'])
+
+        if action == 'user.getapikey':
+            self.key = resp['DATA']['API_KEY']
 
         return resp
 
@@ -121,5 +129,12 @@ class API(object):
 
     __metaclass__ = APIGenerator
 
-    def __init__(self, api_key):
+    def __init__(self, api_key=None):
+        """ Initialize the API by providing your Linode API key; which can
+        be obtained from your Linode Profile page.
+
+        Alternatively, provide no API key and call
+        :class:`API.user_getapikey`.
+        """
+
         self.key = api_key
