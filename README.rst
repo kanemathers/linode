@@ -21,8 +21,3 @@ class::
        >>> print linodes.json
 
 See ``help(API)`` for the available functions.
-
-TODO
-----
-
-- ``**kwargs`` need to be shown in the docstring.

@@ -30,32 +30,52 @@ class APIGenerator(type):
         methods = spec['DATA']['METHODS']
 
         for i in methods:
-            method_name = i.replace('.', '_')
-            doc         = methods[i]['DESCRIPTION']
-            parameters  = methods[i]['PARAMETERS']
+            (name, fn) = build_api_method(i, methods[i])
 
-            fn          = build_api_method(i, parameters)
-            fn.__doc__  = '\n'.join(textwrap.wrap(doc))
-            fn.__name__ = str(method_name)
-
-            setattr(new_class, method_name, fn)
+            setattr(new_class, name, fn)
 
         new_class.version = version
 
         return new_class
 
-def build_api_method(action, parameters):
+def build_api_method(action, info):
     """ Factory for building API methods.
 
-    Returns a new function to perform the specified API ``action``. The
-    ``parameters``, provided by Linode, will be used to determine what
-    arguments are required for the API call.
+    Given an API ``action`` and the information returned from the API,
+    ``info``, returns a new function to perform the action.
 
-    If a required argument is missing, a :class:`exceptions.MissingArgument`
-    exception will be raised.
+    Raises :class:`exceptions.MissingArgument` if a required argument is
+    missing.
     """
 
-    required = [i for i in parameters if parameters[i]['REQUIRED']]
+    name     = action.replace('.', '_')
+    doc      = textwrap.wrap(info['DESCRIPTION'])
+    params   = info['PARAMETERS']
+    required = set()
+    raises   = info['THROWS']
+
+    if params:
+        doc    += ['', ':Parameters:', '']
+        wrapper = textwrap.TextWrapper(initial_indent='    ',
+                                       subsequent_indent='       ',
+                                       width=66)
+
+        for param in params:
+            info = '- `{0}`: {1}'.format(param, params[param]['DESCRIPTION'])
+
+            if not params[param]['REQUIRED']:
+                info = '{0} (optional)'.format(info)
+            else:
+                required.add(param)
+
+            doc += wrapper.wrap(info)
+
+    if raises:
+        doc   += ['']
+        raises = raises.split(',')
+
+        for exc in raises:
+            doc += ['Raises :class:exceptions.APIError ({0})'.format(exc)]
 
     def fn(self, **kwargs):
         for k in required:
@@ -79,7 +99,10 @@ def build_api_method(action, parameters):
 
         return resp
 
-    return fn
+    fn.__doc__  = '\n'.join(doc)
+    fn.__name__ = str(name)
+
+    return (name, fn)
 
 class API(object):
     """ Linode API.
