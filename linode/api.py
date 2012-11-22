@@ -67,7 +67,7 @@ def build_api_method(action, parameters):
         request['api_action']         = action
         request['api_responseFormat'] = 'json'
 
-        resp = requests.get('https://api.linode.com/api/', params=request)
+        resp = requests.get('https://api.linode.com/', params=request)
         resp = resp.json
 
         if resp['ERRORARRAY']:
