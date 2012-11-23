@@ -14,7 +14,8 @@ except IOError:
 setup(name='linode',
       version='0.1',
       packages=find_packages(),
-      description='Python bindings for the Linode API',
+      description=('Provides dynamic, always up to date, Python bindings '
+                   'for the Linode API'),
       long_description=README,
       install_requires=['requests'],
       author='Kane Mathers',
