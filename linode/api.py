@@ -22,7 +22,7 @@ class APIGenerator(type):
 
         try:
             spec = requests.get('https://api.linode.com/?api_action=api.spec')
-            spec = spec.json
+            spec = spec.json()
         except requests.exceptions.RequestException:
             raise RuntimeWarning('Failed to fetch API spec from '
                                  'api.linode.com')
@@ -56,7 +56,7 @@ def build_api_method(action, info):
     raises   = info['THROWS']
 
     if params:
-        doc    += ['', ':Parameters:', '']
+        doc    += ['', ':Parameters:']
         wrapper = textwrap.TextWrapper(initial_indent='    ',
                                        subsequent_indent='       ',
                                        width=66)
@@ -93,7 +93,7 @@ def build_api_method(action, info):
         request['api_responseFormat'] = 'json'
 
         resp = requests.get('https://api.linode.com/', params=request)
-        resp = resp.json
+        resp = resp.json()
 
         if resp['ERRORARRAY']:
             # we obviously can't raise multiple exceptions. so we'll let

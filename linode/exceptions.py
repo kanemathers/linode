@@ -22,3 +22,5 @@ class APIError(Exception):
 
 class APIKeyError(Exception):
     """ Raised when a request is attempted with no API key set. """
+
+    pass

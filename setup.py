@@ -12,7 +12,7 @@ except IOError:
     README = ''
 
 setup(name='linode',
-      version='0.1',
+      version='0.2',
       packages=find_packages(),
       description=('Provides dynamic, always up to date, Python bindings '
                    'for the Linode API'),
